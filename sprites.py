@@ -11,7 +11,7 @@ class Spritesheet:
     def get_sprite(self, x, y, width, height):
         sprite = pygame.Surface([width, height])
         sprite.blit(self.sheet, (0, 0), (x, y, width, height))
-        # sprite.set_colorkey(BLACK)
+        sprite.set_colorkey(BLACK)
         return sprite
 
 
@@ -30,7 +30,7 @@ class Player(pygame.sprite.Sprite):
         self.x_change = 0
         self.y_change = 0
 
-        self.facing = 'down'
+        self.animation_loop = 1
 
         self.image = self.game.character_spritesheet.get_sprite(3, 2, self.width, self.height)
 
@@ -43,7 +43,9 @@ class Player(pygame.sprite.Sprite):
         self.movement()
 
         self.rect.x += self.x_change
+        self.collide_blocks('x')
         self.rect.y += self.y_change
+        self.collide_blocks('y')
 
         self.x_change = 0
         self.y_change = 0
@@ -52,16 +54,30 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
             self.x_change -= PLAYER_SPEED
-            self.facing = 'left'
         if keys[pygame.K_RIGHT]:
             self.x_change += PLAYER_SPEED
-            self.facing = 'right'
         if keys[pygame.K_DOWN]:
             self.y_change += PLAYER_SPEED
-            self.facing = 'down'
         if keys[pygame.K_UP]:
             self.y_change -= PLAYER_SPEED
-            self.facing = 'up'
+
+    def collide_blocks(self,direction):
+        if direction == "x":
+            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+            if hits:
+                if self.x_change > 0:
+                    self.rect.x = hits[0].rect.left - self.rect.width
+                if self.x_change < 0:
+                    self.rect.x = hits[0].rect.right
+
+        if direction == "y":
+            hits = pygame.sprite.spritecollide(self, self.game.blocks, False)
+            if hits:
+                if self.y_change > 0:
+                    self.rect.y = hits[0].rect.top - self.rect.height
+                if self.y_change < 0:
+                    self.rect.y = hits[0].rect.bottom
+
 
 
 class Block(pygame.sprite.Sprite):
