@@ -27,6 +27,9 @@ class Player(pygame.sprite.Sprite):
         self.width = TILES_SIZE
         self.height = TILES_SIZE
 
+        self.battle_mode = False
+
+
         self.x_change = 0
         self.y_change = 0
 
@@ -41,17 +44,20 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = self.y
 
     def update(self):
-        self.movement()
-        self.animate()
-        self.collide_enemy()
+        if self.battle_mode:
+            self.pokemon_battle()
+        else:
+            self.movement()
+            self.animate()
 
-        self.rect.x += self.x_change
-        self.collide_blocks('x')
-        self.rect.y += self.y_change
-        self.collide_blocks('y')
+            self.rect.x += self.x_change
+            self.collide_blocks('x')
+            self.rect.y += self.y_change
+            self.collide_blocks('y')
 
-        self.x_change = 0
-        self.y_change = 0
+            self.x_change = 0
+            self.y_change = 0
+            self.battle_mode = self.collide_enemy()
 
     def movement(self):
         keys = pygame.key.get_pressed()
@@ -69,10 +75,16 @@ class Player(pygame.sprite.Sprite):
             self.facing = 'up'
 
     def collide_enemy(self):
-        hits = pygame.sprite.spritecollide(self, self.game.enemies, False)
+        hits = pygame.sprite.spritecollide(self, self.game.enemies, True)
         if hits:
-            #trigger pokemon fight event
-            pass
+            return True
+        return False
+
+    def pokemon_battle(self):
+        print("battle")
+        screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
+        pygame.draw.rect(screen, (230, 230, 230), pygame.Rect(5, WIN_HEIGHT - 150, WIN_WIDTH - 15, 150))
+        pygame.display.flip()
 
     def collide_blocks(self, direction):
         if direction == "x":
@@ -216,6 +228,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.animation_loop += 0.1
                 if self.animation_loop >= 3:
                     self.animation_loop = 1
+
 
 class Block(pygame.sprite.Sprite):
     def __init__(self, game, x, y):

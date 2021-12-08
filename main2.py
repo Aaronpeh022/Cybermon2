@@ -59,6 +59,7 @@ class Game:
             self.events()
             self.update()
             self.draw()
+
         self.running = False
 
     def game_over(self):
