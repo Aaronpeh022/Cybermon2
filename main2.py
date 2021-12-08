@@ -156,8 +156,9 @@ class Game:
 
         p_health = self.font.render('HP: {}/{}'.format(current_health,self.player_pokemon.health), True, BLACK)
         p_health_rect = p_health.get_rect(x=270, y=250)
-        p_skill1 = self.font.render('HP: {}'.format(self.player_pokemon.health), True, BLACK)
-        p_skill1_rect = p_skill1.get_rect(x=270, y=250)
+        p_skill1 = Button(270, 300, 100, 50, WHITE, BLACK, self.player_pokemon.skill1, 30)
+        p_skill2 = Button(380, 300, 100, 50, WHITE, BLACK, self.player_pokemon.skill2, 30)
+
 
         turn = 1
         data = random.choice(self.pokemon_data)
@@ -172,7 +173,9 @@ class Game:
 
             self.screen.blit(self.intro_background, (0, 0))
             self.screen.blit(title, title_rect)
-            self.screen.blit(health, health_rect)
+            self.screen.blit(p_health, p_health_rect)
+            self.screen.blit(p_skill1.image, p_skill1.rect)
+            self.screen.blit(p_skill2.image, p_skill2.rect)
             self.screen.blit(self.player_pokemon.image, self.player_pokemon.rect)
             self.screen.blit(enemies_pokemon.image, enemies_pokemon.rect)
             self.clock.tick(FPS)
