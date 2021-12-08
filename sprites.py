@@ -16,7 +16,7 @@ class Spritesheet:
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, game, x, y, pokemon):
+    def __init__(self, game, x, y):
         self.game = game
         self._layer = PLAYER_LAYER
         self.groups = self.game.all_sprites
@@ -42,23 +42,19 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
 
-        self.pokemon = pokemon
 
     def update(self):
-        if self.battle_mode:
-            self.pokemon_battle()
-        else:
-            self.movement()
-            self.animate()
+        self.movement()
+        self.animate()
 
-            self.rect.x += self.x_change
-            self.collide_blocks('x')
-            self.rect.y += self.y_change
-            self.collide_blocks('y')
+        self.rect.x += self.x_change
+        self.collide_blocks('x')
+        self.rect.y += self.y_change
+        self.collide_blocks('y')
 
-            self.x_change = 0
-            self.y_change = 0
-            self.battle_mode = self.collide_enemy()
+        self.x_change = 0
+        self.y_change = 0
+        self.battle_mode = self.collide_enemy()
 
     def movement(self):
         keys = pygame.key.get_pressed()
@@ -79,13 +75,6 @@ class Player(pygame.sprite.Sprite):
         hits = pygame.sprite.spritecollide(self, self.game.enemies, True)
         if hits:
             return True
-        return False
-
-    def pokemon_battle(self):
-        print("battle")
-        screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
-        pygame.draw.rect(screen, (230, 230, 230), pygame.Rect(5, WIN_HEIGHT - 150, WIN_WIDTH - 15, 150))
-        pygame.display.flip()
 
     def collide_blocks(self, direction):
         if direction == "x":
@@ -299,10 +288,6 @@ class Button:
             return False
         return False
 
-    def set_img(self, img):
-        img_to_load = pygame.image.load(img).convert()
-        self.image.blit(img_to_load, (0, 0))
-
 
 class StarterButton:
     def __init__(self, x, y, width, height, img):
@@ -328,7 +313,7 @@ class StarterButton:
 
 
 class pokemon:
-    def __init__(self, name, img, health, attack, skill1, skill2):
+    def __init__(self, name, img, health, attack, skill1, skill2,x,y):
         self.name = name
         self.img = img
         self.health = health
@@ -340,3 +325,5 @@ class pokemon:
         self.rect = self.image.get_rect()
         img_to_load = pygame.image.load(img).convert()
         self.image.blit(img_to_load, (0, 0))
+        self.rect.x = x
+        self.rect.y = y
