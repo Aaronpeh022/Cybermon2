@@ -71,7 +71,7 @@ class Player(pygame.sprite.Sprite):
     def collide_enemy(self):
         hits = pygame.sprite.spritecollide(self, self.game.enemies, False)
         if hits:
-            #trigger pokemon fight event
+            # trigger pokemon fight event
             pass
 
     def collide_blocks(self, direction):
@@ -217,6 +217,7 @@ class Enemy(pygame.sprite.Sprite):
                 if self.animation_loop >= 3:
                     self.animation_loop = 1
 
+
 class Block(pygame.sprite.Sprite):
     def __init__(self, game, x, y):
         self.game = game
@@ -277,6 +278,35 @@ class Button:
         self.text = self.font.render(self.content, True, self.fg)
         self.text_rect = self.text.get_rect(center=(self.width / 2, self.height / 2))
         self.image.blit(self.text, self.text_rect)
+
+    def is_pressed(self, pos, pressed):
+        if self.rect.collidepoint(pos):
+            if pressed[0]:
+                return True
+            return False
+        return False
+
+    def set_img(self, img):
+        img_to_load = pygame.image.load(img).convert()
+        self.image.blit(img_to_load, (0, 0))
+
+
+class StarterButton:
+    def __init__(self, x, y, width, height,img):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+
+        self.image = pygame.Surface((self.width, self.height))
+        self.rect = self.image.get_rect()
+        img_to_load = pygame.image.load(img).convert()
+        self.image.blit(img_to_load, (0, 0))
+
+        self.rect.x = self.x
+        self.rect.y = self.y
+
 
     def is_pressed(self, pos, pressed):
         if self.rect.collidepoint(pos):
