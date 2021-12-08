@@ -297,3 +297,32 @@ class Button:
                 return True
             return False
         return False
+
+    def set_img(self, img):
+        img_to_load = pygame.image.load(img).convert()
+        self.image.blit(img_to_load, (0, 0))
+
+
+class StarterButton:
+    def __init__(self, x, y, width, height,img):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+
+
+        self.image = pygame.Surface((self.width, self.height))
+        self.rect = self.image.get_rect()
+        img_to_load = pygame.image.load(img).convert()
+        self.image.blit(img_to_load, (0, 0))
+
+        self.rect.x = self.x
+        self.rect.y = self.y
+
+
+    def is_pressed(self, pos, pressed):
+        if self.rect.collidepoint(pos):
+            if pressed[0]:
+                return True
+            return False
+        return False

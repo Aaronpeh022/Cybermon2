@@ -95,9 +95,43 @@ class Game:
             self.clock.tick(FPS)
             pygame.display.update()
 
+    def pokemon_selection(self):
+        selection = True
+
+        title = self.font.render('Starter Selection', True, BLACK)
+        title_rect = title.get_rect(x=200, y=10)
+
+        charmander = StarterButton(235, 60, 150, 150, 'img/charmander.png')
+        squirtle = StarterButton(120, 240, 150, 150, 'img/squirtle.png')
+        bulbasaur = StarterButton(350, 240, 150, 150, 'img/bulbasaur.png')
+        while selection:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    selection = False
+                    self.running = False
+            mouse_pos = pygame.mouse.get_pos()
+            mouse_pressed = pygame.mouse.get_pressed()
+
+            if charmander.is_pressed(mouse_pos, mouse_pressed):
+                pass
+
+            if squirtle.is_pressed(mouse_pos, mouse_pressed):
+                pass
+
+            if bulbasaur.is_pressed(mouse_pos, mouse_pressed):
+                pass
+
+            self.screen.blit(self.intro_background, (0, 0))
+            self.screen.blit(title, title_rect)
+            self.screen.blit(charmander.image, charmander.rect)
+            self.screen.blit(squirtle.image, squirtle.rect)
+            self.screen.blit(bulbasaur.image, bulbasaur.rect)
+            self.clock.tick(FPS)
+            pygame.display.update()
 
 g = Game()
 g.intro_screen()
+g.pokemon_selection()
 g.new()
 while g.running:
     g.main()
