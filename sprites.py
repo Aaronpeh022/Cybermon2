@@ -16,7 +16,7 @@ class Spritesheet:
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y, pokemon):
         self.game = game
         self._layer = PLAYER_LAYER
         self.groups = self.game.all_sprites
@@ -28,7 +28,6 @@ class Player(pygame.sprite.Sprite):
         self.height = TILES_SIZE
 
         self.battle_mode = False
-
 
         self.x_change = 0
         self.y_change = 0
@@ -42,6 +41,8 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.x = self.x
         self.rect.y = self.y
+
+        self.pokemon = pokemon
 
     def update(self):
         if self.battle_mode:
@@ -304,12 +305,11 @@ class Button:
 
 
 class StarterButton:
-    def __init__(self, x, y, width, height,img):
+    def __init__(self, x, y, width, height, img):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
-
 
         self.image = pygame.Surface((self.width, self.height))
         self.rect = self.image.get_rect()
@@ -319,10 +319,24 @@ class StarterButton:
         self.rect.x = self.x
         self.rect.y = self.y
 
+    # def is_pressed(self, pos, pressed):
+    #     if self.rect.collidepoint(pos):
+    #         if pressed[0]:
+    #             return True
+    #         return False
+    #     return False
 
-    def is_pressed(self, pos, pressed):
-        if self.rect.collidepoint(pos):
-            if pressed[0]:
-                return True
-            return False
-        return False
+
+class pokemon:
+    def __init__(self, name, img, health, attack, skill1, skill2):
+        self.name = name
+        self.img = img
+        self.health = health
+        self.attack = attack
+        self.skill1 = skill1
+        self.skill2 = skill2
+
+        self.image = pygame.Surface((150, 150))
+        self.rect = self.image.get_rect()
+        img_to_load = pygame.image.load(img).convert()
+        self.image.blit(img_to_load, (0, 0))

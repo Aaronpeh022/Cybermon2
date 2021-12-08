@@ -1,0 +1,43 @@
+[
+  {
+    "name": "Bulbasaur",
+    "img" : "img/bulbasaur.png",
+    "health": 45,
+    "attack": 49,
+    "skill1": "Vine Whip",
+    "skill2": "Tackle"
+  },
+  {
+    "name": "Charmander",
+    "img" : "img/charmander.png",
+    "health": 39,
+    "attack": 52,
+    "skill1": "Ember",
+    "skill2": "Scratch"
+  },
+  {
+    "name": "Squirtle",
+    "img" : "img/squirtle.png",
+    "health": 44,
+    "attack": 48,
+    "skill1": "Water Gun",
+    "skill2": "Tackle"
+  },
+  {
+    "name": "Pidgey",
+    "img" : "img/pidgey.png",
+    "health": 40,
+    "attack": 45,
+    "skill1": "Gust",
+    "skill2": "Tackle"
+  },
+  {
+    "name": "Caterpie",
+    "img" : "img/caterpie.png",
+    "health": 45,
+    "attack": 30,
+    "skill1": "Bug Bite",
+    "skill2": "Tackle"
+  }
+
+]

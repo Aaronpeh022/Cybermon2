@@ -2,6 +2,7 @@ import pygame
 from sprites import *
 from config import *
 import sys
+import json
 
 
 class Game:
@@ -25,7 +26,7 @@ class Game:
                 if column == "E":
                     Enemy(self, j, i)
                 if column == "P":
-                    Player(self, j, i)
+                    Player(self, j, i, self.player_pokemon)
 
     def new(self):
         self.playing = True
@@ -104,22 +105,33 @@ class Game:
         charmander = StarterButton(235, 60, 150, 150, 'img/charmander.png')
         squirtle = StarterButton(120, 240, 150, 150, 'img/squirtle.png')
         bulbasaur = StarterButton(350, 240, 150, 150, 'img/bulbasaur.png')
+        self.pokemon_data = json.load(open("pokemon_data.json"))
         while selection:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     selection = False
                     self.running = False
-            mouse_pos = pygame.mouse.get_pos()
-            mouse_pressed = pygame.mouse.get_pressed()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
 
-            if charmander.is_pressed(mouse_pos, mouse_pressed):
-                pass
-
-            if squirtle.is_pressed(mouse_pos, mouse_pressed):
-                pass
-
-            if bulbasaur.is_pressed(mouse_pos, mouse_pressed):
-                pass
+                    if charmander.rect.collidepoint(mouse_pos):
+                        for data in self.pokemon_data:
+                            if data["name"] == "Charmander":
+                                self.player_pokemon = pokemon(data["name"], data["img"], data["health"], data["attack"],
+                                                              data["skill1"], data["skill2"])
+                                selection = False
+                    elif squirtle.rect.collidepoint(mouse_pos):
+                        for data in self.pokemon_data:
+                            if data["name"] == "Squirtle":
+                                self.player_pokemon = pokemon(data["name"], data["img"], data["health"], data["attack"],
+                                                              data["skill1"], data["skill2"])
+                                selection = False
+                    elif bulbasaur.rect.collidepoint(mouse_pos):
+                        for data in self.pokemon_data:
+                            if data["name"] == "Bulbasaur":
+                                self.player_pokemon = pokemon(data["name"], data["img"], data["health"], data["attack"],
+                                                              data["skill1"], data["skill2"])
+                                selection = False
 
             self.screen.blit(self.intro_background, (0, 0))
             self.screen.blit(title, title_rect)
@@ -128,6 +140,7 @@ class Game:
             self.screen.blit(bulbasaur.image, bulbasaur.rect)
             self.clock.tick(FPS)
             pygame.display.update()
+
 
 g = Game()
 g.intro_screen()
