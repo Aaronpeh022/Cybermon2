@@ -150,15 +150,17 @@ class Game:
     def pokemon_battle(self):
         battle = True
 
+        current_health = self.player_pokemon.health
         title = self.font.render('Battle', True, BLACK)
         title_rect = title.get_rect(x=200, y=10)
 
-        health = self.font.render('HP: {}'.format(self.player_pokemon.health), True, BLACK)
-        health_rect = health.get_rect(x=270, y=250)
+        p_health = self.font.render('HP: {}/{}'.format(current_health,self.player_pokemon.health), True, BLACK)
+        p_health_rect = p_health.get_rect(x=270, y=250)
+        p_skill1 = self.font.render('HP: {}'.format(self.player_pokemon.health), True, BLACK)
+        p_skill1_rect = p_skill1.get_rect(x=270, y=250)
 
         turn = 1
         data = random.choice(self.pokemon_data)
-        print(data)
         enemies_pokemon = pokemon(data["name"], data["img"], data["health"], data["attack"],
                                   data["skill1"], data["skill2"], 400, 50)
         while battle:
