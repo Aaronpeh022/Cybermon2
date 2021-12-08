@@ -176,11 +176,70 @@ class Game:
                     battle = False
                     self.running = False
 
-            if p_skill1.is_pressed(mouse_pos, mouse_pressed):
-                pass
+            mouse_pos = pygame.mouse.get_pos()
+            mouse_pressed = pygame.mouse.get_pressed()
 
-            if p_skill2.is_pressed(mouse_pos, mouse_pressed):
-                pass
+
+
+            if turn == 1:
+                if p_skill1.is_pressed(mouse_pos, mouse_pressed):
+                    attack_string = "{} used {}".format(self.player_pokemon.name, self.player_pokemon.skill1)
+                    attack_title = self.font.render(attack_string, True, BLACK)
+                    attack_title_rect = attack_title.get_rect(x=200, y=400)
+                    self.screen.blit(attack_title, attack_title_rect)
+                    pygame.display.update()
+                    pygame.time.delay(2000)
+                    e_health_rect = e_health.get_rect(x=1000, y=1000)
+                    self.screen.blit(e_health, e_health_rect)
+                    pygame.time.delay(2000)
+                    dmg = self.player_pokemon.attack
+                    e_current_health -= dmg
+                    e_health = self.font.render('HP: {}/{}'.format(e_current_health, enemies_pokemon.health), True,
+                                                BLACK)
+                    e_health_rect = e_health.get_rect(x=240, y=50)
+                    turn = 2
+                    pygame.display.update()
+
+                if p_skill2.is_pressed(mouse_pos, mouse_pressed):
+                    attack_string = "{} used {}".format(self.player_pokemon.name, self.player_pokemon.skill2)
+                    attack_title = self.font.render(attack_string, True, BLACK)
+                    attack_title_rect = attack_title.get_rect(x=200, y=400)
+                    self.screen.blit(attack_title, attack_title_rect)
+                    pygame.display.update()
+                    pygame.time.delay(2000)
+
+                    dmg = self.player_pokemon.attack
+                    e_current_health -= dmg
+                    e_health = self.font.render('HP: {}/{}'.format(e_current_health, enemies_pokemon.health), True,
+                                                BLACK)
+                    e_health_rect = e_health.get_rect(x=240, y=50)
+                    turn = 2
+                    pygame.display.update()
+
+                self.screen.blit(e_health, e_health_rect)
+
+            if turn == 2:
+                enemy_skill_int = random.randint(1,2)
+                if enemy_skill_int == 1:
+                    enemy_string = "{} used {}".format(enemies_pokemon.name, enemies_pokemon.skill1)
+                    attack_title = self.font.render(enemy_string, True, BLACK)
+                    attack_title_rect = attack_title.get_rect(x=200, y=400)
+                    self.screen.blit(attack_title, attack_title_rect)
+                    pygame.display.update()
+                    pygame.time.delay(2000)
+                    current_health -= enemies_pokemon.attack
+                    turn = 1
+                    pygame.display.update()
+                if enemy_skill_int == 2:
+                    enemy_string = "{} used {}".format(enemies_pokemon.name, enemies_pokemon.skill2)
+                    attack_title = self.font.render(enemy_string, True, BLACK)
+                    attack_title_rect = attack_title.get_rect(x=200, y=400)
+                    self.screen.blit(attack_title, attack_title_rect)
+                    pygame.display.update()
+                    pygame.time.delay(2000)
+                    current_health -= enemies_pokemon.attack
+                    turn = 1
+                    pygame.display.update()
 
             self.screen.blit(self.intro_background, (0, 0))
             self.screen.blit(title, title_rect)
