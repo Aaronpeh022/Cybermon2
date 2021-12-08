@@ -151,6 +151,10 @@ class Game:
         battle = True
 
         current_health = self.player_pokemon.health
+        data = random.choice(self.pokemon_data)
+        enemies_pokemon = pokemon(data["name"], data["img"], data["health"], data["attack"],
+                                  data["skill1"], data["skill2"], 400, 50)
+        e_current_health = enemies_pokemon.health
         title = self.font.render('Battle', True, BLACK)
         title_rect = title.get_rect(x=200, y=10)
 
@@ -159,11 +163,12 @@ class Game:
         p_skill1 = Button(270, 300, 100, 50, WHITE, BLACK, self.player_pokemon.skill1, 30)
         p_skill2 = Button(380, 300, 100, 50, WHITE, BLACK, self.player_pokemon.skill2, 30)
 
+        e_health = self.font.render('HP: {}/{}'.format(e_current_health, enemies_pokemon.health), True, BLACK)
+        e_health_rect = e_health.get_rect(x=240, y=50)
+
 
         turn = 1
-        data = random.choice(self.pokemon_data)
-        enemies_pokemon = pokemon(data["name"], data["img"], data["health"], data["attack"],
-                                  data["skill1"], data["skill2"], 400, 50)
+
         while battle:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -171,11 +176,18 @@ class Game:
                     battle = False
                     self.running = False
 
+            if p_skill1.is_pressed(mouse_pos, mouse_pressed):
+                pass
+
+            if p_skill2.is_pressed(mouse_pos, mouse_pressed):
+                pass
+
             self.screen.blit(self.intro_background, (0, 0))
             self.screen.blit(title, title_rect)
             self.screen.blit(p_health, p_health_rect)
             self.screen.blit(p_skill1.image, p_skill1.rect)
             self.screen.blit(p_skill2.image, p_skill2.rect)
+            self.screen.blit(e_health, e_health_rect)
             self.screen.blit(self.player_pokemon.image, self.player_pokemon.rect)
             self.screen.blit(enemies_pokemon.image, enemies_pokemon.rect)
             self.clock.tick(FPS)
@@ -185,7 +197,7 @@ class Game:
 g = Game()
 # g.intro_screen()
 g.pokemon_selection()
-# g.pokemon_battle()
+g.pokemon_battle()
 g.new()
 while g.running:
     g.main()
