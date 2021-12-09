@@ -179,10 +179,9 @@ class Game:
         while battle:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    self.enemy_counter -= 1
-                    self.battle_mode = False
                     battle = False
                     self.running = False
+                    self.playing = False
 
             mouse_pos = pygame.mouse.get_pos()
             mouse_pressed = pygame.mouse.get_pressed()
@@ -276,6 +275,7 @@ class Game:
         pygame.time.wait(3000)
         print(battle_result)
         if battle_result == 'win':
+            self.enemy_counter -= 1
             self.battle_mode = False
             return False
         else:
