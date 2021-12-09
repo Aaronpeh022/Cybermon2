@@ -38,6 +38,13 @@
     "attack": 30,
     "skill1": "Bug Bite",
     "skill2": "Tackle"
+  },
+  {
+    "name": "Mewtwo",
+    "img" : "img/mewtwo.png",
+    "health": 99,
+    "attack": 99,
+    "skill1": "Psystrike",
+    "skill2": "Future Sight"
   }
-
 ]
