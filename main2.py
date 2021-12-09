@@ -257,11 +257,16 @@ class Game:
                     pygame.display.update()
                     pygame.time.wait(1000)
 
-            if turn == 2:
-                pass
-                # enemy_skill_int = random.randint(1,2)
-                # if enemy_skill_int == 1:
-                #     enemy_string = "{} used {}".format(enemies_pokemon.name, enemies_pokemon.skill1)
+            elif turn == 2:
+                enemy_skill_int = random.randint(1, 2)
+                if enemy_skill_int == 1:
+                    enemy_string = "{} used {}".format(enemies_pokemon.name, enemies_pokemon.skill1)
+                    turn, current_health, p_health, p_health_rect = self.generate_attack_box(enemy_string, p_health,
+                                                                                             enemies_pokemon.attack,
+                                                                                             current_health,
+                                                                                             self.player_pokemon.health,
+                                                                                             turn, True)
+
                 #     attack_title = self.font.render(enemy_string, True, BLACK)
                 #     attack_title_rect = attack_title.get_rect(x=200, y=400)
                 #     self.screen.blit(attack_title, attack_title_rect)
@@ -269,8 +274,33 @@ class Game:
                 #     current_health -= enemies_pokemon.attack
                 #     turn = 1
                 #     pygame.display.update()
-                # if enemy_skill_int == 2:
-                #     enemy_string = "{} used {}".format(enemies_pokemon.name, enemies_pokemon.skill2)
+                if enemy_skill_int == 2:
+                    enemy_string = "{} used {}".format(enemies_pokemon.name, enemies_pokemon.skill2)
+                    turn, current_health, p_health, p_health_rect = self.generate_attack_box(enemy_string, p_health,
+                                                                                             enemies_pokemon.attack,
+                                                                                             current_health,
+                                                                                             self.player_pokemon.health,
+                                                                                             turn, True)
+                if current_health < 0:
+                    # Battle won
+                    print("Battle lost")
+                    battle = self.generate_end_battle("lost")
+                    battle_result_title = self.font.render("You Lost!", True, BLACK)
+                    battle_result_rect = battle_result_title.get_rect(x=200, y=400)
+
+                    self.screen.blit(self.intro_background, (0, 0))
+                    self.screen.blit(title, title_rect)
+                    self.screen.blit(p_health, p_health_rect)
+                    self.screen.blit(p_skill1.image, p_skill1.rect)
+                    self.screen.blit(p_skill2.image, p_skill2.rect)
+                    self.screen.blit(e_health, e_health_rect)
+                    self.screen.blit(battle_result_title, battle_result_rect)
+                    self.screen.blit(self.player_pokemon.image, self.player_pokemon.rect)
+                    self.screen.blit(enemies_pokemon.image, enemies_pokemon.rect)
+                    self.clock.tick(FPS)
+                    pygame.display.update()
+                    pygame.time.wait(1000)
+                    self.game_over()
                 #     attack_title = self.font.render(enemy_string, True, BLACK)
                 #     attack_title_rect = attack_title.get_rect(x=200, y=400)
                 #     self.screen.blit(attack_title, attack_title_rect)
@@ -290,7 +320,7 @@ class Game:
             self.clock.tick(FPS)
             pygame.display.update()
 
-    def generate_attack_box(self, attack_string, health, attack, current_health, total_health, turn):
+    def generate_attack_box(self, attack_string, health, attack, current_health, total_health, turn, enemy=False):
         attack_title = self.font.render(attack_string, True, BLACK)
         attack_title_rect = attack_title.get_rect(x=200, y=400)
         self.screen.blit(attack_title, attack_title_rect)
@@ -301,14 +331,18 @@ class Game:
         self.screen.blit(attack_title, attack_title_rect)
         pygame.display.update()
 
-        #remove the health box
+        # remove the health box
         health_rect = health.get_rect(x=1000, y=1000)
         self.screen.blit(health, health_rect)
         dmg = attack
         current_health -= dmg
         print("{} from function".format(current_health))
+        if enemy:
+            x_val, y_val = 270, 250
+        else:
+            x_val, y_val = 240, 50
         health = self.font.render('HP: {}/{}'.format(current_health, total_health), True, BLACK)
-        health_rect = health.get_rect(x=240, y=50)
+        health_rect = health.get_rect(x=x_val, y=y_val)
         self.screen.blit(health, health_rect)
         pygame.display.update()
         if turn == 1:
@@ -328,10 +362,36 @@ class Game:
         else:
             self.running = False
             self.game_over()
+            return True
 
     def boss_fight(self):
         self.boss_mode = True
         self.new(BOSSMAP)
+
+    def render_screen(self, stats=None):
+        battle = self.generate_end_battle("win")
+        battle_result_title = self.font.render("You Win!", True, BLACK)
+        battle_result_rect = battle_result_title.get_rect(x=200, y=400)
+
+        self.screen.blit(self.intro_background, (0, 0))
+        self.screen.blit(title, title_rect)
+        self.screen.blit(p_health, p_health_rect)
+        self.screen.blit(p_skill1.image, p_skill1.rect)
+        self.screen.blit(p_skill2.image, p_skill2.rect)
+        self.screen.blit(e_health, e_health_rect)
+        if stats == "win":
+            battle_result_title = self.font.render("You Win!", True, BLACK)
+            battle_result_rect = battle_result_title.get_rect(x=200, y=400)
+            self.screen.blit(battle_result_title, battle_result_rect)
+        if stats == "lose":
+            battle_result_title = self.font.render("You Lose!", True, BLACK)
+            battle_result_rect = battle_result_title.get_rect(x=200, y=400)
+            self.screen.blit(battle_result_title, battle_result_rect)
+        self.screen.blit(self.player_pokemon.image, self.player_pokemon.rect)
+        self.screen.blit(enemies_pokemon.image, enemies_pokemon.rect)
+        self.clock.tick(FPS)
+        pygame.display.update()
+        pygame.time.wait(1000)
 
 
 if __name__ == "__main__":
