@@ -4,7 +4,7 @@
     "img" : "img/bulbasaur.png",
     "health": 45,
     "attack": 49,
-    "skill1": "Vine Whip",
+    "skill1": "Absorb",
     "skill2": "Tackle"
   },
   {
@@ -20,7 +20,7 @@
     "img" : "img/squirtle.png",
     "health": 44,
     "attack": 48,
-    "skill1": "Water Gun",
+    "skill1": "Surf",
     "skill2": "Tackle"
   },
   {
