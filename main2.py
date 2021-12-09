@@ -226,7 +226,7 @@ class Game:
                                                                                                self.player_pokemon.attack,
                                                                                                e_current_health,
                                                                                                enemies_pokemon.health,
-                                                                                               crit, turn)
+                                                                                               turn, crit)
 
                 if p_skill2.is_pressed(mouse_pos, mouse_pressed):
                     attack_string = "{} used {}".format(self.player_pokemon.name, self.player_pokemon.skill2)
@@ -234,7 +234,7 @@ class Game:
                                                                                                self.player_pokemon.attack,
                                                                                                e_current_health,
                                                                                                enemies_pokemon.health,
-                                                                                               crit, turn)
+                                                                                               turn, crit)
 
                 if e_current_health < 0:
                     # Battle won
@@ -319,7 +319,7 @@ class Game:
             self.clock.tick(FPS)
             pygame.display.update()
 
-    def generate_attack_box(self, attack_string, health, attack, current_health, total_health, turn, crit, enemy=False):
+    def generate_attack_box(self, attack_string, health, attack, current_health, total_health, turn, crit=0, enemy=False):
         attack_title = self.font.render(attack_string, True, BLACK)
         attack_title_rect = attack_title.get_rect(x=200, y=400)
         self.screen.blit(attack_title, attack_title_rect)
