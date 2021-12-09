@@ -158,14 +158,13 @@ class Game:
         title = self.font.render('Battle', True, BLACK)
         title_rect = title.get_rect(x=200, y=10)
 
-        p_health = self.font.render('HP: {}/{}'.format(current_health,self.player_pokemon.health), True, BLACK)
+        p_health = self.font.render('HP: {}/{}'.format(current_health, self.player_pokemon.health), True, BLACK)
         p_health_rect = p_health.get_rect(x=270, y=250)
         p_skill1 = Button(270, 300, 100, 50, WHITE, BLACK, self.player_pokemon.skill1, 30)
         p_skill2 = Button(380, 300, 100, 50, WHITE, BLACK, self.player_pokemon.skill2, 30)
 
         e_health = self.font.render('HP: {}/{}'.format(e_current_health, enemies_pokemon.health), True, BLACK)
         e_health_rect = e_health.get_rect(x=240, y=50)
-
 
         turn = 1
 
@@ -179,67 +178,50 @@ class Game:
             mouse_pos = pygame.mouse.get_pos()
             mouse_pressed = pygame.mouse.get_pressed()
 
-
-
             if turn == 1:
                 if p_skill1.is_pressed(mouse_pos, mouse_pressed):
                     attack_string = "{} used {}".format(self.player_pokemon.name, self.player_pokemon.skill1)
-                    attack_title = self.font.render(attack_string, True, BLACK)
-                    attack_title_rect = attack_title.get_rect(x=200, y=400)
-                    self.screen.blit(attack_title, attack_title_rect)
-                    pygame.display.update()
-                    pygame.time.delay(2000)
-                    e_health_rect = e_health.get_rect(x=1000, y=1000)
-                    self.screen.blit(e_health, e_health_rect)
-                    pygame.time.delay(2000)
-                    dmg = self.player_pokemon.attack
-                    e_current_health -= dmg
-                    e_health = self.font.render('HP: {}/{}'.format(e_current_health, enemies_pokemon.health), True,
-                                                BLACK)
-                    e_health_rect = e_health.get_rect(x=240, y=50)
-                    turn = 2
-                    pygame.display.update()
+                    turn, e_current_health, e_health, e_health_rect = self.generate_attack_box(attack_string, e_health,
+                                                                                               self.player_pokemon.attack,
+                                                                                               e_current_health,
+                                                                                               enemies_pokemon.health,
+                                                                                               turn)
 
                 if p_skill2.is_pressed(mouse_pos, mouse_pressed):
                     attack_string = "{} used {}".format(self.player_pokemon.name, self.player_pokemon.skill2)
-                    attack_title = self.font.render(attack_string, True, BLACK)
-                    attack_title_rect = attack_title.get_rect(x=200, y=400)
-                    self.screen.blit(attack_title, attack_title_rect)
-                    pygame.display.update()
-                    pygame.time.delay(2000)
-
-                    dmg = self.player_pokemon.attack
-                    e_current_health -= dmg
-                    e_health = self.font.render('HP: {}/{}'.format(e_current_health, enemies_pokemon.health), True,
-                                                BLACK)
-                    e_health_rect = e_health.get_rect(x=240, y=50)
-                    turn = 2
-                    pygame.display.update()
+                    turn, e_current_health, e_health, e_health_rect = self.generate_attack_box(attack_string, e_health,
+                                                                                               self.player_pokemon.attack,
+                                                                                               e_current_health,
+                                                                                               enemies_pokemon.health,
+                                                                                               turn)
 
                 self.screen.blit(e_health, e_health_rect)
+                if e_current_health < 0:
+                    # Battle won
+                    print("Battle won")
+                    battle = self.generate_end_battle("win")
 
             if turn == 2:
-                enemy_skill_int = random.randint(1,2)
-                if enemy_skill_int == 1:
-                    enemy_string = "{} used {}".format(enemies_pokemon.name, enemies_pokemon.skill1)
-                    attack_title = self.font.render(enemy_string, True, BLACK)
-                    attack_title_rect = attack_title.get_rect(x=200, y=400)
-                    self.screen.blit(attack_title, attack_title_rect)
-                    pygame.display.update()
-                    pygame.time.delay(2000)
-                    current_health -= enemies_pokemon.attack
-                    turn = 1
-                    pygame.display.update()
-                if enemy_skill_int == 2:
-                    enemy_string = "{} used {}".format(enemies_pokemon.name, enemies_pokemon.skill2)
-                    attack_title = self.font.render(enemy_string, True, BLACK)
-                    attack_title_rect = attack_title.get_rect(x=200, y=400)
-                    self.screen.blit(attack_title, attack_title_rect)
-                    pygame.display.update()
-                    pygame.time.delay(2000)
-                    current_health -= enemies_pokemon.attack
-                    turn = 1
-                    pygame.display.update()
+                pass
+                # enemy_skill_int = random.randint(1,2)
+                # if enemy_skill_int == 1:
+                #     enemy_string = "{} used {}".format(enemies_pokemon.name, enemies_pokemon.skill1)
+                #     attack_title = self.font.render(enemy_string, True, BLACK)
+                #     attack_title_rect = attack_title.get_rect(x=200, y=400)
+                #     self.screen.blit(attack_title, attack_title_rect)
+                #     pygame.display.update()
+                #     current_health -= enemies_pokemon.attack
+                #     turn = 1
+                #     pygame.display.update()
+                # if enemy_skill_int == 2:
+                #     enemy_string = "{} used {}".format(enemies_pokemon.name, enemies_pokemon.skill2)
+                #     attack_title = self.font.render(enemy_string, True, BLACK)
+                #     attack_title_rect = attack_title.get_rect(x=200, y=400)
+                #     self.screen.blit(attack_title, attack_title_rect)
+                #     pygame.display.update()
+                #     current_health -= enemies_pokemon.attack
+                #     turn = 1
+                #     pygame.display.update()
 
             self.screen.blit(self.intro_background, (0, 0))
             self.screen.blit(title, title_rect)
@@ -251,6 +233,45 @@ class Game:
             self.screen.blit(enemies_pokemon.image, enemies_pokemon.rect)
             self.clock.tick(FPS)
             pygame.display.update()
+
+    def generate_attack_box(self, attack_string, health, attack, current_health, total_health, turn):
+        attack_title = self.font.render(attack_string, True, BLACK)
+        attack_title_rect = attack_title.get_rect(x=200, y=400)
+        self.screen.blit(attack_title, attack_title_rect)
+        pygame.display.update()
+        pygame.time.wait(3000)
+
+        attack_title_rect = attack_title.get_rect(x=1000, y=1000)
+        self.screen.blit(attack_title, attack_title_rect)
+        pygame.display.update()
+
+        #remove the health box
+        health_rect = health.get_rect(x=1000, y=1000)
+        self.screen.blit(health, health_rect)
+        dmg = attack
+        current_health -= dmg
+        print("{} from function".format(current_health))
+        health = self.font.render('HP: {}/{}'.format(current_health, total_health), True, BLACK)
+        health_rect = health.get_rect(x=240, y=50)
+        self.screen.blit(health, health_rect)
+        pygame.display.update()
+        if turn == 1:
+            return 2, current_health, health, health_rect
+        return 1, current_health, health, health_rect
+
+    def generate_end_battle(self, battle_result):
+        battle_result_title = self.font.render("You {}!".format(battle_result), True, BLACK)
+        battle_result_rect = battle_result_title.get_rect(x=200, y=400)
+        self.screen.blit(battle_result_title, battle_result_rect)
+        pygame.display.update()
+        pygame.time.wait(3000)
+        print(battle_result)
+        if battle_result == 'win':
+            self.battle_mode = False
+            return False
+        else:
+            self.running = False
+            self.game_over()
 
 
 g = Game()
