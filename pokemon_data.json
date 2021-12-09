@@ -11,7 +11,7 @@
     "name": "Charmander",
     "img" : "img/charmander.png",
     "health": 39,
-    "attack": 52,
+    "attack": 1000,
     "skill1": "Ember",
     "skill2": "Scratch"
   },

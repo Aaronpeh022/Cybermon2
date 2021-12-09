@@ -51,10 +51,13 @@ class Game:
 
     def update(self):
         self.all_sprites.update()
+        if self.enemy_counter == 0 and self.boss_mode:
+            self.game_over()
         if self.player.battle_mode:
             self.battle_mode = True
         if self.enemy_counter == 0:
             self.boss_fight()
+
 
     def draw(self):
         self.screen.fill(BLACK)
@@ -64,6 +67,8 @@ class Game:
 
     def main(self):
         # game loop
+        g.pokemon_selection()
+        g.new(TILEMAP)
         while self.playing:
             if self.battle_mode:
                 self.pokemon_battle()
@@ -75,16 +80,45 @@ class Game:
         self.running = False
 
     def game_over(self):
-        pass
+        selection = True
+
+        title = self.font.render('Game Over', True, BLACK)
+        title_rect = title.get_rect(x=200, y=10)
+
+        play_button = Button(200, 50, 200, 50, WHITE, BLACK, 'New Game', 32)
+        quit_button = Button(200, 110, 100, 50, WHITE, BLACK, 'Quit', 32)
+        while selection:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    selection = False
+                    self.running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+
+                    if play_button.rect.collidepoint(mouse_pos):
+                        selection = False
+                        self.boss_mode = False
+                        self.main()
+                    elif quit_button.rect.collidepoint(mouse_pos):
+                        selection = False
+                        pygame.quit()
+                        sys.exit()
+            self.screen.blit(self.intro_background, (0, 0))
+            self.screen.blit(title, title_rect)
+            self.screen.blit(play_button.image, play_button.rect)
+            self.screen.blit(quit_button.image, quit_button.rect)
+            self.clock.tick(FPS)
+            pygame.display.update()
+
 
     def intro_screen(self):
         intro = True
 
         title = self.font.render('Pokemon', True, BLACK)
-        title_rect = title.get_rect(x=10, y=10)
+        title_rect = title.get_rect(x=200, y=10)
 
-        play_button = Button(10, 50, 100, 50, WHITE, BLACK, 'Play', 32)
-        quit_button = Button(10, 110, 100, 50, WHITE, BLACK, 'Quit', 32)
+        play_button = Button(200, 50, 100, 50, WHITE, BLACK, 'Play', 32)
+        quit_button = Button(200, 110, 100, 50, WHITE, BLACK, 'Quit', 32)
         while intro:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -302,11 +336,7 @@ class Game:
 
 if __name__ == "__main__":
     g = Game()
-    # g.intro_screen()
-    g.pokemon_selection()
-    g.new(TILEMAP)
     while g.running:
+        g.intro_screen()
         g.main()
-        g.game_over()
-    pygame.quit()
-    sys.exit()
+
