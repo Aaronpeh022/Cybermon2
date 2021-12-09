@@ -42,7 +42,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = self.x
         self.rect.y = self.y
 
-
     def update(self):
         self.movement()
         self.animate()
@@ -75,6 +74,7 @@ class Player(pygame.sprite.Sprite):
         hits = pygame.sprite.spritecollide(self, self.game.enemies, True)
         if hits:
             return True
+        return False
 
     def collide_blocks(self, direction):
         if direction == "x":
@@ -144,11 +144,12 @@ class Player(pygame.sprite.Sprite):
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y,boss_mode):
         self.game = game
         self._layer = ENEMY_LAYER
         self.groups = self.game.all_sprites, self.game.enemies
         pygame.sprite.Sprite.__init__(self, self.groups)
+        self.boss_mode = boss_mode
 
         self.x = x * TILES_SIZE
         self.y = y * TILES_SIZE
@@ -183,16 +184,19 @@ class Enemy(pygame.sprite.Sprite):
         self.y_change = 0
 
     def movement(self):
-        if self.facing == 'left':
-            self.x_change -= ENEMY_SPEED
-            self.movement_loop -= 1
-            if self.movement_loop <= -self.max_travel:
-                self.facing = 'right'
-        if self.facing == 'right':
-            self.x_change += ENEMY_SPEED
-            self.movement_loop += 1
-            if self.movement_loop >= self.max_travel:
-                self.facing = 'left'
+        if not self.boss_mode:
+            if self.facing == 'left':
+                self.x_change -= ENEMY_SPEED
+                self.movement_loop -= 1
+                if self.movement_loop <= -self.max_travel:
+                    self.facing = 'right'
+            if self.facing == 'right':
+                self.x_change += ENEMY_SPEED
+                self.movement_loop += 1
+                if self.movement_loop >= self.max_travel:
+                    self.facing = 'left'
+        else:
+            self.facing = 'down'
 
     def animate(self):
         left_animations = [self.game.enemy_spritesheet.get_sprite(3, 98, self.width, self.height),
@@ -304,16 +308,9 @@ class StarterButton:
         self.rect.x = self.x
         self.rect.y = self.y
 
-    # def is_pressed(self, pos, pressed):
-    #     if self.rect.collidepoint(pos):
-    #         if pressed[0]:
-    #             return True
-    #         return False
-    #     return False
-
 
 class pokemon:
-    def __init__(self, name, img, health, attack, skill1, skill2,x,y):
+    def __init__(self, name, img, health, attack, skill1, skill2, x, y):
         self.name = name
         self.img = img
         self.health = health

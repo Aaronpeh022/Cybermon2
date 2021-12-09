@@ -17,19 +17,22 @@ class Game:
         self.enemy_spritesheet = Spritesheet('img/enemy.png')
         self.intro_background = pygame.image.load('img/introbackground.png')
         self.battle_mode = False
+        self.enemy_counter = 0
+        self.boss_mode = False
 
-    def create_tile_map(self):
-        for i, row in enumerate(TILEMAP):
+    def create_tile_map(self, tilemap):
+        for i, row in enumerate(tilemap):
             for j, column in enumerate(row):
                 Ground(self, j, i)
                 if column == "B":
                     Block(self, j, i)
                 if column == "E":
-                    Enemy(self, j, i)
+                    Enemy(self, j, i, self.boss_mode)
+                    self.enemy_counter += 1
                 if column == "P":
                     self.player = Player(self, j, i)
 
-    def new(self):
+    def new(self, map):
         self.playing = True
 
         self.all_sprites = pygame.sprite.LayeredUpdates()
@@ -37,7 +40,7 @@ class Game:
         self.enemies = pygame.sprite.LayeredUpdates()
         self.attacks = pygame.sprite.LayeredUpdates()
 
-        self.create_tile_map()
+        self.create_tile_map(map)
 
     def events(self):
         # game loop events
@@ -50,6 +53,8 @@ class Game:
         self.all_sprites.update()
         if self.player.battle_mode:
             self.battle_mode = True
+        if self.enemy_counter == 0:
+            self.boss_fight()
 
     def draw(self):
         self.screen.fill(BLACK)
@@ -121,24 +126,14 @@ class Game:
                     mouse_pos = pygame.mouse.get_pos()
 
                     if charmander.rect.collidepoint(mouse_pos):
-                        for data in self.pokemon_data:
-                            if data["name"] == "Charmander":
-                                self.player_pokemon = pokemon(data["name"], data["img"], data["health"], data["attack"],
-                                                              data["skill1"], data["skill2"], 100, 250)
-                                selection = False
+                        self.player_pokemon = self.pokemon_generation(False, 100, 250, "Charmander")
+                        selection = False
                     elif squirtle.rect.collidepoint(mouse_pos):
-                        for data in self.pokemon_data:
-                            if data["name"] == "Squirtle":
-                                self.player_pokemon = pokemon(data["name"], data["img"], data["health"], data["attack"],
-                                                              data["skill1"], data["skill2"], 100, 250)
-                                selection = False
+                        self.player_pokemon = self.pokemon_generation(False, 100, 250, "Squirtle")
+                        selection = False
                     elif bulbasaur.rect.collidepoint(mouse_pos):
-                        for data in self.pokemon_data:
-                            if data["name"] == "Bulbasaur":
-                                self.player_pokemon = pokemon(data["name"], data["img"], data["health"], data["attack"],
-                                                              data["skill1"], data["skill2"], 100, 250)
-                                selection = False
-
+                        self.player_pokemon = self.pokemon_generation(False, 100, 250, "Bulbasaur")
+                        selection = False
             self.screen.blit(self.intro_background, (0, 0))
             self.screen.blit(title, title_rect)
             self.screen.blit(charmander.image, charmander.rect)
@@ -147,13 +142,26 @@ class Game:
             self.clock.tick(FPS)
             pygame.display.update()
 
+    def pokemon_generation(self, random_spawn, x, y, name=""):
+        if random_spawn:
+            data = random.choice([x for x in self.pokemon_data if x["name"] != "Mewtwo"])
+            generated_pokemon = pokemon(data["name"], data["img"], data["health"], data["attack"],
+                                        data["skill1"], data["skill2"], x, y)
+        else:
+            for data in self.pokemon_data:
+                if data["name"] == name:
+                    generated_pokemon = pokemon(data["name"], data["img"], data["health"], data["attack"],
+                                                data["skill1"], data["skill2"], x, y)
+        return generated_pokemon
+
     def pokemon_battle(self):
         battle = True
 
         current_health = self.player_pokemon.health
-        data = random.choice(self.pokemon_data)
-        enemies_pokemon = pokemon(data["name"], data["img"], data["health"], data["attack"],
-                                  data["skill1"], data["skill2"], 400, 50)
+        if self.boss_mode:
+            enemies_pokemon = self.pokemon_generation(False, 400, 50, "Mewtwo")
+        else:
+            enemies_pokemon = self.pokemon_generation(True, 400, 50)
         e_current_health = enemies_pokemon.health
         title = self.font.render('Battle', True, BLACK)
         title_rect = title.get_rect(x=200, y=10)
@@ -171,6 +179,7 @@ class Game:
         while battle:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    self.enemy_counter -= 1
                     self.battle_mode = False
                     battle = False
                     self.running = False
@@ -273,14 +282,18 @@ class Game:
             self.running = False
             self.game_over()
 
+    def boss_fight(self):
+        self.boss_mode = True
+        self.new(BOSSMAP)
 
-g = Game()
-# g.intro_screen()
-g.pokemon_selection()
-g.pokemon_battle()
-g.new()
-while g.running:
-    g.main()
-    g.game_over()
-pygame.quit()
-sys.exit()
+
+if __name__ == "__main__":
+    g = Game()
+    # g.intro_screen()
+    g.pokemon_selection()
+    g.new(TILEMAP)
+    while g.running:
+        g.main()
+        g.game_over()
+    pygame.quit()
+    sys.exit()
