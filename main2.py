@@ -58,7 +58,6 @@ class Game:
         if self.enemy_counter == 0:
             self.boss_fight()
 
-
     def draw(self):
         self.screen.fill(BLACK)
         self.all_sprites.draw(self.screen)
@@ -109,7 +108,6 @@ class Game:
             self.screen.blit(quit_button.image, quit_button.rect)
             self.clock.tick(FPS)
             pygame.display.update()
-
 
     def intro_screen(self):
         intro = True
@@ -221,13 +219,14 @@ class Game:
             mouse_pressed = pygame.mouse.get_pressed()
 
             if turn == 1:
+                crit = random.randint(1, 10)
                 if p_skill1.is_pressed(mouse_pos, mouse_pressed):
                     attack_string = "{} used {}".format(self.player_pokemon.name, self.player_pokemon.skill1)
                     turn, e_current_health, e_health, e_health_rect = self.generate_attack_box(attack_string, e_health,
                                                                                                self.player_pokemon.attack,
                                                                                                e_current_health,
                                                                                                enemies_pokemon.health,
-                                                                                               turn)
+                                                                                               crit, turn)
 
                 if p_skill2.is_pressed(mouse_pos, mouse_pressed):
                     attack_string = "{} used {}".format(self.player_pokemon.name, self.player_pokemon.skill2)
@@ -235,7 +234,7 @@ class Game:
                                                                                                self.player_pokemon.attack,
                                                                                                e_current_health,
                                                                                                enemies_pokemon.health,
-                                                                                               turn)
+                                                                                               crit, turn)
 
                 if e_current_health < 0:
                     # Battle won
@@ -320,7 +319,7 @@ class Game:
             self.clock.tick(FPS)
             pygame.display.update()
 
-    def generate_attack_box(self, attack_string, health, attack, current_health, total_health, turn, enemy=False):
+    def generate_attack_box(self, attack_string, health, attack, current_health, total_health, turn, crit, enemy=False):
         attack_title = self.font.render(attack_string, True, BLACK)
         attack_title_rect = attack_title.get_rect(x=200, y=400)
         self.screen.blit(attack_title, attack_title_rect)
@@ -335,6 +334,8 @@ class Game:
         health_rect = health.get_rect(x=1000, y=1000)
         self.screen.blit(health, health_rect)
         dmg = attack
+        if crit == 1:
+            dmg *= 2
         current_health -= dmg
         print("{} from function".format(current_health))
         if enemy:
@@ -399,4 +400,3 @@ if __name__ == "__main__":
     while g.running:
         g.intro_screen()
         g.main()
-
