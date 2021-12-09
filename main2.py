@@ -361,6 +361,7 @@ class Game:
             return False
         else:
             self.running = False
+            self.battle_mode = False
             self.game_over()
             return True
 
