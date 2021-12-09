@@ -362,7 +362,6 @@ class Game:
         else:
             self.running = False
             self.battle_mode = False
-            self.game_over()
             return True
 
     def boss_fight(self):
