@@ -367,6 +367,7 @@ class Game:
             self.battle_mode = False
             return False
         else:
+            self.enemy_counter -= 1
             self.running = False
             self.battle_mode = False
             return True

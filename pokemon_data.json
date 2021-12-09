@@ -3,7 +3,7 @@
     "name": "Bulbasaur",
     "img" : "img/bulbasaur.png",
     "health": 45,
-    "attack": 3,
+    "attack": 49,
     "skill1": "Absorb",
     "skill2": "Tackle"
   },
