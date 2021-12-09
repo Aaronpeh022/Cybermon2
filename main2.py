@@ -264,7 +264,7 @@ class Game:
                                                                                              enemies_pokemon.attack,
                                                                                              current_health,
                                                                                              self.player_pokemon.health,
-                                                                                             turn, True)
+                                                                                             turn, 0, True)
 
                 #     attack_title = self.font.render(enemy_string, True, BLACK)
                 #     attack_title_rect = attack_title.get_rect(x=200, y=400)
@@ -279,7 +279,7 @@ class Game:
                                                                                              enemies_pokemon.attack,
                                                                                              current_health,
                                                                                              self.player_pokemon.health,
-                                                                                             turn, True)
+                                                                                             turn, 0, True)
                 if current_health < 0:
                     # Battle won
                     print("Battle lost")
@@ -340,8 +340,14 @@ class Game:
         print("{} from function".format(current_health))
         if enemy:
             x_val, y_val = 270, 250
+            health_rect = health.get_rect(x=1000, y=1000)
+            self.screen.blit(health, health_rect)
+            pygame.display.update()
         else:
             x_val, y_val = 240, 50
+            health_rect = health.get_rect(x=1000, y=1000)
+            self.screen.blit(health, health_rect)
+            pygame.display.update()
         health = self.font.render('HP: {}/{}'.format(current_health, total_health), True, BLACK)
         health_rect = health.get_rect(x=x_val, y=y_val)
         self.screen.blit(health, health_rect)
