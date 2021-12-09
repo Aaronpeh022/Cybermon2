@@ -90,8 +90,8 @@ class Game:
         while selection:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    selection = False
-                    self.running = False
+                    pygame.quit()
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
 
