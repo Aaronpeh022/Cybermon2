@@ -203,17 +203,20 @@ class Game:
                                                                                                enemies_pokemon.health,
                                                                                                turn)
 
-                self.screen.blit(e_health, e_health_rect)
                 if e_current_health < 0:
                     # Battle won
                     print("Battle won")
                     battle = self.generate_end_battle("win")
+                    battle_result_title = self.font.render("You Win!", True, BLACK)
+                    battle_result_rect = battle_result_title.get_rect(x=200, y=400)
+
                     self.screen.blit(self.intro_background, (0, 0))
                     self.screen.blit(title, title_rect)
                     self.screen.blit(p_health, p_health_rect)
                     self.screen.blit(p_skill1.image, p_skill1.rect)
                     self.screen.blit(p_skill2.image, p_skill2.rect)
                     self.screen.blit(e_health, e_health_rect)
+                    self.screen.blit(battle_result_title, battle_result_rect)
                     self.screen.blit(self.player_pokemon.image, self.player_pokemon.rect)
                     self.screen.blit(enemies_pokemon.image, enemies_pokemon.rect)
                     self.clock.tick(FPS)
