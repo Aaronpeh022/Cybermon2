@@ -118,6 +118,31 @@ class Game:
             pygame.display.update()
             pygame.time.delay(5)
 
+    def dissolve(self):
+        speed = 2
+        first = pygame.image.load('img/image_1.jpg').convert_alpha()
+        second = pygame.image.load('img/image_2.jpg').convert_alpha()
+        x = 1
+        y = 255
+        diss_1 = pygame.Surface((WIN_WIDTH, WIN_HEIGHT))
+        diss_1.fill(BLACK)
+        diss_2 = pygame.Surface((WIN_WIDTH, WIN_HEIGHT))
+        diss_2.fill(BLACK)
+        diss_1.set_alpha(x)
+        diss_2.set_alpha(y)
+        diss_1.blit(first, (0, 0))
+        diss_2.blit(second, (0, 0))
+        while x <= 255:
+            diss_1.set_alpha(x)
+            diss_2.set_alpha(y)
+            self.screen.blit(diss_1, (0, 0))
+            self.screen.blit(diss_2, (0, 0))
+            pygame.display.flip()
+            self.clock.tick(FPS)
+            pygame.event.pump()
+            x += speed
+            y -= speed
+
     def intro_screen(self):
         intro = True
 
@@ -199,7 +224,7 @@ class Game:
         return generated_pokemon
 
     def pokemon_battle(self):
-        self.fade()
+        self.dissolve()
         battle = True
 
         current_health = self.player_pokemon.health
