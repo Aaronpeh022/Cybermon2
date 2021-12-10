@@ -82,10 +82,10 @@ class Game:
         selection = True
 
         title = self.font.render('Game Over', True, BLACK)
-        title_rect = title.get_rect(x=200, y=10)
+        title_rect = title.get_rect(x=230, y=10)
 
-        play_button = Button(200, 50, 200, 50, WHITE, BLACK, 'New Game', 32)
-        quit_button = Button(200, 110, 100, 50, WHITE, BLACK, 'Quit', 32)
+        play_button = Button(215, 50, 200, 50, WHITE, BLACK, 'New Game', 32)
+        quit_button = Button(260, 110, 100, 50, WHITE, BLACK, 'Quit', 32)
         while selection:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -147,10 +147,10 @@ class Game:
         intro = True
 
         title = self.font.render('Pokemon', True, BLACK)
-        title_rect = title.get_rect(x=200, y=10)
+        title_rect = title.get_rect(x=250, y=10)
 
-        play_button = Button(200, 50, 100, 50, WHITE, BLACK, 'Play', 32)
-        quit_button = Button(200, 110, 100, 50, WHITE, BLACK, 'Quit', 32)
+        play_button = Button(260, 50, 100, 50, WHITE, BLACK, 'Play', 30)
+        quit_button = Button(260, 110, 100, 50, WHITE, BLACK, 'Quit', 30)
         while intro:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -234,7 +234,7 @@ class Game:
             enemies_pokemon = self.pokemon_generation(True, 400, 50)
         e_current_health = enemies_pokemon.health
         title = self.font.render('Battle', True, BLACK)
-        title_rect = title.get_rect(x=200, y=10)
+        title_rect = title.get_rect(x=270, y=10)
 
         p_health = self.font.render('HP: {}/{}'.format(current_health, self.player_pokemon.health), True, BLACK)
         p_health_rect = p_health.get_rect(x=270, y=250)
