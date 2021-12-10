@@ -304,6 +304,7 @@ class StarterButton:
         self.rect = self.image.get_rect()
         img_to_load = pygame.image.load(img).convert()
         self.image.blit(img_to_load, (0, 0))
+        self.image.set_colorkey(WHITE)
 
         self.rect.x = self.x
         self.rect.y = self.y
@@ -322,5 +323,6 @@ class pokemon:
         self.rect = self.image.get_rect()
         img_to_load = pygame.image.load(img).convert()
         self.image.blit(img_to_load, (0, 0))
+        self.image.set_colorkey(WHITE)
         self.rect.x = x
         self.rect.y = y
