@@ -46,8 +46,8 @@ class Game:
         # game loop events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.playing = False
-                self.running = False
+                pygame.quit()
+                sys.exit()
 
     def update(self):
         self.all_sprites.update()
@@ -109,6 +109,15 @@ class Game:
             self.clock.tick(FPS)
             pygame.display.update()
 
+    def fade(self):
+        fade = pygame.Surface((WIN_WIDTH, WIN_HEIGHT))
+        fade.fill((0, 0, 0))
+        for alpha in range(0, 150):
+            fade.set_alpha(alpha)
+            self.screen.blit(fade, (0, 0))
+            pygame.display.update()
+            pygame.time.delay(5)
+
     def intro_screen(self):
         intro = True
 
@@ -120,8 +129,8 @@ class Game:
         while intro:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    intro = False
-                    self.running = False
+                    pygame.quit()
+                    sys.exit()
             mouse_pos = pygame.mouse.get_pos()
             mouse_pressed = pygame.mouse.get_pressed()
 
@@ -140,6 +149,7 @@ class Game:
             pygame.display.update()
 
     def pokemon_selection(self):
+        self.fade()
         selection = True
 
         title = self.font.render('Starter Selection', True, BLACK)
@@ -149,11 +159,12 @@ class Game:
         squirtle = StarterButton(120, 240, 150, 150, 'img/squirtle.png')
         bulbasaur = StarterButton(350, 240, 150, 150, 'img/bulbasaur.png')
         self.pokemon_data = json.load(open("pokemon_data.json"))
+        fading = True
         while selection:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    selection = False
-                    self.running = False
+                    pygame.quit()
+                    sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     mouse_pos = pygame.mouse.get_pos()
 
@@ -173,6 +184,7 @@ class Game:
             self.screen.blit(bulbasaur.image, bulbasaur.rect)
             self.clock.tick(FPS)
             pygame.display.update()
+        self.fade()
 
     def pokemon_generation(self, random_spawn, x, y, name=""):
         if random_spawn:
@@ -187,6 +199,7 @@ class Game:
         return generated_pokemon
 
     def pokemon_battle(self):
+        self.fade()
         battle = True
 
         current_health = self.player_pokemon.health
@@ -211,9 +224,8 @@ class Game:
         while battle:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    battle = False
-                    self.running = False
-                    self.playing = False
+                    pygame.quit()
+                    sys.exit()
 
             mouse_pos = pygame.mouse.get_pos()
             mouse_pressed = pygame.mouse.get_pressed()
@@ -299,14 +311,8 @@ class Game:
                     self.clock.tick(FPS)
                     pygame.display.update()
                     pygame.time.wait(1000)
+                    self.fade()
                     self.game_over()
-                #     attack_title = self.font.render(enemy_string, True, BLACK)
-                #     attack_title_rect = attack_title.get_rect(x=200, y=400)
-                #     self.screen.blit(attack_title, attack_title_rect)
-                #     pygame.display.update()
-                #     current_health -= enemies_pokemon.attack
-                #     turn = 1
-                #     pygame.display.update()
 
             self.screen.blit(self.intro_background, (0, 0))
             self.screen.blit(title, title_rect)
@@ -318,8 +324,10 @@ class Game:
             self.screen.blit(enemies_pokemon.image, enemies_pokemon.rect)
             self.clock.tick(FPS)
             pygame.display.update()
+        self.fade()
 
-    def generate_attack_box(self, attack_string, health, attack, current_health, total_health, turn, crit=0, enemy=False):
+    def generate_attack_box(self, attack_string, health, attack, current_health, total_health, turn, crit=0,
+                            enemy=False):
         attack_title = self.font.render(attack_string, True, BLACK)
         attack_title_rect = attack_title.get_rect(x=200, y=400)
         self.screen.blit(attack_title, attack_title_rect)
